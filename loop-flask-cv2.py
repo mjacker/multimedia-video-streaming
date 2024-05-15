@@ -4,6 +4,9 @@ import time
 
 app = Flask(__name__)
 
+IMAGE_RESOLUTION_WIDTH = 400
+IMAGE_RESOLUTION_HEIGHT = 400
+
 video_path = 'meatzoo.mp4'  # Replace 'your_video
 camera = cv2.VideoCapture(video_path)  # Use 0 for the default camera (usually the Raspberry Pi camera)
 
@@ -20,7 +23,7 @@ def generate_frames():
         else:
 
             gray = frame
-            gray = cv2.resize(gray, (600, 600))
+            gray = cv2.resize(gray, (IMAGE_RESOLUTION_HEIGHT, IMAGE_RESOLUTION_WIDTH))
             font = cv2.FONT_HERSHEY_SIMPLEX
             new_frame_time = time.time()
 
