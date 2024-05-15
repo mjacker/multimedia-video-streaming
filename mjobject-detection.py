@@ -8,8 +8,8 @@ import time
 def generate_frames():
 
     # start webcam
-    # cap = cv2.VideoCapture('meatzoo.mp4')
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture('thieves.mp4')
+    # cap = cv2.VideoCapture(0)
     cap.set(3, 640)
     cap.set(4, 480)
 
@@ -17,26 +17,15 @@ def generate_frames():
     model = YOLO("yolo-Weights/yolov8n.pt")
 
     # object classes
-    classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
-                  "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat",
-                  "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella",
-                  "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", "sports ball", "kite", "baseball bat",
-                  "baseball glove", "skateboard", "surfboard", "tennis racket", "bottle", "wine glass", "cup",
-                  "fork", "knife", "spoon", "bowl", "banana", "apple", "sandwich", "orange", "broccoli",
-                  "carrot", "hot dog", "pizza", "donut", "cake", "chair", "sofa", "pottedplant", "bed",
-                  "diningtable", "toilet", "tvmonitor", "laptop", "mouse", "remote", "keyboard", "cell phone",
-                  "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
-                  "teddy bear", "hair drier", "toothbrush"
-                  ]
+    classNames = ["person"]
 
     
+    prev_frame_time = 0
+    new_frame_time = time.time()
     while True:
         success, img = cap.read()
         results = model(img, stream=True)
 
-        prev_frame_time = time.time()
-        new_frame_time = time.time()
-        sleep_second = 0
         new_frame_time = time.time()
 
 
@@ -57,8 +46,8 @@ def generate_frames():
                 print("Confidence --->",confidence)
 
                 # class name
-                cls = int(box.cls[0])
-                print("Class name -->", classNames[cls])
+                # cls = int(box.cls[0])
+                # print("Class name -->", classNames[cls])
 
                 # object details
                 org = [x1, y1]
@@ -67,14 +56,13 @@ def generate_frames():
                 color = (255, 0, 0)
                 thickness = 2
 
-                cv2.putText(img, classNames[cls], org, font, fontScale, color, thickness)
-
+                # cv2.putText(img, classNames[cls], org, font, fontScale, color, thickness)
     
                 gray = img
                 gray = cv2.resize(gray, (600, 600))
                 font = cv2.FONT_HERSHEY_SIMPLEX
 
-                # fps = 1 / (new_frame_time - prev_frame_time)
+                fps = 1 / (new_frame_time - prev_frame_time + 1)
 
                 # if (int(new_frame_time - prev_frame_time)) > 5:
                 # if (fps) > 60:
@@ -84,9 +72,9 @@ def generate_frames():
                 new_frame_time = time.time()
 
                 prev_frame_time = new_frame_time
-                # fps = int(fps)
-                #fps = str(fps)
-                cv2.putText(gray, "X", (50, 100), font, 3, (100, 255, 0), 3, cv2.LINE_AA)
+                fps = int(fps)
+                fps = str(fps)
+                cv2.putText(gray, fps, (50, 100), font, 3, (100, 255, 0), 3, cv2.LINE_AA)
 
 
                 ret, buffer = cv2.imencode('.jpg', gray)
