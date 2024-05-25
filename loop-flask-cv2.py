@@ -1,15 +1,19 @@
 from flask import Flask, Response
 import cv2
 import time
+import wget
+import os
 
 app = Flask(__name__)
 
 IMAGE_RESOLUTION_WIDTH = 400
 IMAGE_RESOLUTION_HEIGHT = 400
-
+VIDEO_URL = "https://archive.org/download/MeAtTheZoo/MeAtTheZoo-jnqxac9ivrw.mp4"
 video_path = 'meatzoo.mp4'  # Replace 'your_video
 camera = cv2.VideoCapture(video_path)  # Use 0 for the default camera (usually the Raspberry Pi camera)
 
+filename = wget.download(VIDEO_URL)
+os.rename(filename, video_path)
 
 def generate_frames():
     prev_frame_time = time.time()
