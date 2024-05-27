@@ -3,17 +3,22 @@ import cv2
 import time
 import wget
 import os
+import os.path import exists
 
 app = Flask(__name__)
 
 IMAGE_RESOLUTION_WIDTH = 400
 IMAGE_RESOLUTION_HEIGHT = 400
 VIDEO_URL = "https://archive.org/download/MeAtTheZoo/MeAtTheZoo-jnqxac9ivrw.mp4"
+
 video_path = 'meatzoo.mp4'  # Replace 'your_video
+video_path = 0  # Replace 'your_video
+
 camera = cv2.VideoCapture(video_path)  # Use 0 for the default camera (usually the Raspberry Pi camera)
 
-filename = wget.download(VIDEO_URL)
-os.rename(filename, video_path)
+if type(video_path) == str and not exists(video_path):
+    filename = wget.download(VIDEO_URL)
+    os.rename(filename, video_path)
 
 def generate_frames():
     prev_frame_time = time.time()
@@ -61,4 +66,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, threaded=True)
-
